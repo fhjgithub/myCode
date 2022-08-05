@@ -12,4 +12,4 @@ function arrFlat(arr){
   }
   return res 
 }
-console.log(arrFlat(arr));
+console.log(arrFlat(arr))
