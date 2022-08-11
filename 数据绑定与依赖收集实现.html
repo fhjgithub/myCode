@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <input v-model="name" type="text">
+    <div v-text="name"></div>
+    <input v-model="age" type="text">
+    <div v-text="age"></div>
+  </div>
+</body>
+<script>
+  const data = {
+    name:'jack',
+    age:18
+  }
+  const dep = {
+    map:{},
+    collect(prop,updateFn){
+      if(!this.map[prop]){
+        this.map[prop]= []
+      }
+      this.map[prop].push(updateFn)
+    },
+    trigger(prop){
+      this.map[prop]&&this.map[prop].forEach(updateFn=>{
+        updateFn()
+      })
+    }
+  }
+  Object.keys(data).forEach(key=>{
+    defineReactive(data,key,data[key])
+  })
+  function defineReactive(data,key,value){
+    Object.defineProperty(data,key,{
+      get(){
+        return value
+      },
+      set(n){
+        if(n===value) return
+        value = n
+        dep.trigger(key)
+      }
+    })
+  }
+  function compile(){
+    const app = document.getElementById('app')
+    const nodes = app.childNodes
+    nodes.forEach(node=>{
+      if(node.nodeType === 1){
+        const attrs= node.attributes
+        Array.from(attrs).forEach(attr=>{
+          const name = attr.nodeName
+          const prop = attr.nodeValue
+          if(name === 'v-text'){
+            node.innerHTML= data[prop]
+            dep.collect(prop,()=>{
+              node.innerHTML = data[prop]
+            })
+          }
+          if(name === 'v-model'){
+            node.value = data[prop]
+            node.addEventListener('input',(e)=>{
+              data[prop] = e.target.value
+            })
+            dep.collect(prop,()=>{
+              node.value = data[prop]
+            })
+          }
+
+        })
+      }
+    })
+  }
+compile()
+</script>
+</html>
