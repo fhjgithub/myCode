@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const sourceData = [
+      {
+        id: 1,
+        label: "大唐水电厂",
+        children: [
+          {
+            id: 2,
+            label: "一组",
+            children: [
+              {
+                id: 9,
+                label: "阀门",
+              },
+              {
+                id: 10,
+                label: "开关",
+              },
+              {
+                id: 9,
+                label: "管道",
+              },
+            ],
+          },
+          {
+            id: 3,
+            label: "二组",
+            children: [
+              {
+                id: 11,
+                label: "阀门",
+              },
+              {
+                id: 12,
+                label: "开关",
+              },
+            ],
+          },
+          {
+            id: 4,
+            label: "三组",
+            children: [
+              {
+                id: 13,
+                label: "阀门",
+              },
+              {
+                id: 14,
+                label: "开关",
+              },
+            ],
+          },
+          {
+            id: 5,
+            label: "四组",
+            children: [
+              {
+                id: 14,
+                label: "阀门",
+              },
+            ],
+          },
+        ],
+      },
+    ]
+
+    function getTableData(data,dataMap={},treeMap=[],depth=0){
+      if(!(data&&data.length)){
+        treeMap.push({...dataMap})
+        dataMap= {}
+      }else{
+        depth++
+        data.forEach((item,index)=>{
+          dataMap[`label${depth}`]= item.label
+          getTableData(item.children,dataMap,treeMap,depth)
+        })
+      }
+      return treeMap
+    }
+    console.log(getTableData(sourceData));
+  </script>
+  
+</body>
+</html>
