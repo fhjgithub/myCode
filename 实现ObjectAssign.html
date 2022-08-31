@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 注意1：原生情况下挂载到Object上的属性是不可枚举的，但是直接Object上挂载属性a之后是可枚举的，所以这里必须使用Object.defineProperty，并设置enumerable: false以及writable: true, configurable :true。当然默认情况下不设置就是 false。
+    Object.defineProperty(Object, 'myAssign', {
+      value: function (target) {
+        'use strict'
+        // 注意2: 判断目标对象不能为undefined或null
+        if (target === null) {
+          throw new TypeError('Cannot convert null or undefined to object')
+        }
+        // 注意3: Object.assign()目标对象是原始类型时，会包装成对象，这里使用Object(..)就可以了
+        const to = Object(target)
+        for (let i = 1; i < arguments.length; i++) {
+          const nextSource = arguments[i]
+          if (nextSource !== null) {
+            // 注意4：Object.assign 方法肯定不会拷贝原型链上的属性，所以模拟实现时需要用 hasOwnProperty(..) 判断处理下，但是直接使用 myObject.hasOwnProperty(..) 是有问题的，因为有的对象可能没有连接到 Object.prototype 上（比如通过 Object.create(null) 来创建），这种情况下，使用 myObject.hasOwnProperty(..) 就会失败，解决方法便是如下所示：
+            for (const key in nextSource) {
+              if (Object.prototype.hasOwnProperty.call(nextSource, key)) {
+                to[key] = nextSource[key]
+              }
+            }
+          }
+        }
+        return to
+      },
+      writable: true,
+      configurable: true
+    })
+    const a = { a: 1 }
+    const b = { b: 2 }
+    Object.myAssign(a, b)
+    console.log(a);
+  </script>
+</body>
+
+</html>
