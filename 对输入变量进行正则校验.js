@@ -4,9 +4,6 @@
  * @returns 错误信息
  */
  export const templateContentVarCheck = (value) => {
-  /**
-   * ：\uFF1A
-   */
   const symbolReg = /^[\u4e00-\u9fa5a-zA-Z0-9,~\/\!！\n\\\uFF1A/\s/:\.\^…￥=\}_\-\(【】《》？\?\)。{，。@#\$%&\*（）\+]*$/g
   const text = value || ''
   let errMsg
