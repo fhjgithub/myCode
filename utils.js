@@ -20,3 +20,17 @@ export function to(
 }
 
 export default to
+
+
+// 输入去除emoji
+{/* <el-input v-model.trim="roadTransport.addr" maxlength="50" placeholder @keyup.native="testEmoji"/> */}
+{/* <el-input v-model.number="roadTransport.optRange" maxlength="50" placeholder @keyup.native="testEmoji"/> */}
+function testEmoji() {
+  const regRule = /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g
+  if (regRule.test(this.roadTransport.addr)) {
+    this.roadTransport.addr = this.roadTransport.addr.replace(regRule, '')
+  }
+  if (regRule.test(this.roadTransport.optRange)) {
+    this.roadTransport.optRange = this.roadTransport.optRange.replace(regRule, '')
+  }
+}
