@@ -1,0 +1,58 @@
+{
+  "name": "mobile-official",
+  "version": "1.0.0",
+  "private": true,
+  "config": {
+    "nuxt": {
+      "host": "0.0.0.0",
+      "port": "8001"
+    }
+  },
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "build:daily": "cross-env --ENV_STAGE=daily nuxt build",
+    "deploy:daily": "node deploy.js --env=daily",
+    "build:pre": "cross-env --ENV_STAGE=pre nuxt build",
+    "deploy:pre": "node deploy.js --env=pre",
+    "build:pre2": "cross-env --ENV_STAGE=pre2 nuxt build",
+    "deploy:pre2": "node deploy.js --env=pre2",
+    "build:online": "cross-env --ENV_STAGE=online nuxt build",
+    "deploy:online": "node deploy.js --env=online",
+    "start:pre2": " cross-env --ENV_STAGE=pre2 nuxt start",
+    "start:pre": " cross-env --ENV_STAGE=pre nuxt start",
+    "start:daily": " cross-env --ENV_STAGE=daily nuxt start",
+    "start:online": " cross-env --ENV_STAGE=online nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxt/ufo": "^0.5.4",
+    "@nuxtjs/axios": "^5.12.2",
+    "@vant/area-data": "^1.1.1",
+    "amfe-flexible": "^2.2.1",
+    "core-js": "^3.6.5",
+    "nuxt": "^2.14.6",
+    "spark-md5": "^3.0.1",
+    "vant": "^2.12.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^8.0.0",
+    "babel-plugin-import": "^1.13.0",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "postcss": "^8.3.6",
+    "postcss-px-to-viewport": "^1.1.1",
+    "postcss-pxtorem": "5.1.1",
+    "bluebird": "^3.7.2",
+    "child_process": "^1.0.2",
+    "cross-env": "^7.0.3",
+    "fs-extra": "^10.1.0",
+    "request": "^2.88.2",
+    "tar": "^6.1.12",
+    "yargs": "^17.6.2"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}
