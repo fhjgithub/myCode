@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+  function flatToTree() {
+    const data = [
+      { key: '0-0', title: '0-0', pid: 0, id: 1 },
+      {
+        key: '0-1',
+        title: '0-1',
+        pid: 0,
+        id: 2,
+        children: [
+          { key: '0-1-0', title: '0-1-0', pid: 2, id: 4 },
+          {
+            key: '0-1-1',
+            title: '0-1-1',
+            pid: 2,
+            id: 5,
+            children: [
+              {
+                key: '0-1-15',
+                title: '0-1-15',
+                pid: 5,
+                id: 100,
+                children: [{ key: '0-1-16', title: '0-1-16', pid: 100, id: 200 }]
+              }
+            ]
+          }
+        ]
+      },
+      { key: '0-2', title: '0-3', pid: 0, id: 3 }
+    ]
+    const dataSource = []
+    const dataSourceAll = {}
+    function flatten(list = []) {
+      // list.forEach(item => {
+      //   if (item?.children?.length === 0 || !Array.isArray(item.children)) {
+      //     dataSource.push(item)
+      //   } else {
+      //     flatten(item.children)
+      //   }
+      // })
+      list.forEach(item => {
+        dataSource[item.id] = { ...item, children: [] }
+        flatten(item.children)
+      })
+    }
+    flatten(data)
+    // 把树所有节点铺成map存起来，用于选中子节点时构建树
+    function flatten2(list = []) {
+      list.forEach(item => {
+        dataSourceAll[item.id] = { ...item, children: [] }
+        flatten2(item.children)
+      })
+    }
+    flatten2(data)
+    // 将平铺节点转成tree
+    flatToTree2 = (filteredItems, finalData = [], dataSourceAll) => {
+      const map = {}
+      // 这个filterItems的每个项地址，需要和树节点map对应的对象地址一致，才会正确被引用
+      // ---这个地方是为了输入项的引用和dataMap的项引用是一致的
+      filteredItems = filteredItems.map(v => {
+        return dataSourceAll[v.id]
+      })
+      filteredItems.map(v => {
+        if (!dataSourceAll[v.pid]) {
+          finalData.push(v)
+          return
+        }
+        if (!dataSourceAll[v.pid].children) {
+          dataSourceAll[v.pid].children = []
+        }
+        dataSourceAll[v.pid].children.push(v)
+        // 在这里推送后，需要加一个去重的操作，因为每次子节点往上找，都会推进数组一次，
+        // 如果某个节点推进一次，会往父节点的children推进一次，如果选中项含有该某节点的子项，那么子项往上推后，寻找到子项的父项为该某节点，下一次循环将该某节点推进到父项
+        const duplicateRemoveMap = {}
+        dataSourceAll[v.pid].children.forEach(v => {
+          duplicateRemoveMap[v.id] = v
+        })
+        dataSourceAll[v.pid].children = Object.values(duplicateRemoveMap)
+        map[v.pid] = dataSourceAll[v.pid]
+      })
+      const res = []
+      Object.keys(map).forEach(v => {
+        res.push(map[v])
+      })
+      if (res.length > 0) {
+        this.flatToTree2(res, finalData, dataSourceAll)
+      }
+      return finalData
+    }
+
+    const test = [
+      { key: '0-1-0', title: '0-1-0', pid: 2, id: 4, children: Array(0) },
+      { key: '0-1-1', title: '0-1-1', pid: 2, id: 5, children: Array(0) },
+      { key: '0-1-15', title: '0-1-15', pid: 5, id: 100, children: Array(0) },
+      { key: '0-1-16', title: '0-1-16', pid: 100, id: 200 }]
+
+    const res = flatToTree2(test, [], dataSourceAll)
+    // 对最外层进行去重
+
+    const map = {}
+    res.forEach(v => {
+      map[v.id] = v
+    })
+    Object.values(map)
+    console.log('Object.values(map): ', Object.values(map))
+  }
+  flatToTree()
+</script>
+
+</html>
