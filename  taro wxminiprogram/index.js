@@ -26,3 +26,28 @@ function keyWordHtml(str, word) {
   }
   return `<div style="${richStyle}">${str}</div>`
 }
+
+//自定义状态栏
+/**
+ * 获取导航栏信息
+ * @typedef {Object} NavigationBarInfo
+ * @property {number} statusBarHeight
+ * @property {number} navBarHeight
+ * @returns {NavigationBarInfo} 导航栏信息
+ */
+ export const getNavigationBarInfo = () => {
+  const menuButtonObject = Taro.getMenuButtonBoundingClientRect() // 获取胶囊对象
+  const sysInfo = Taro.getSystemInfoSync() // 获取设备系统对象
+  const statusBarHeight = sysInfo.statusBarHeight // 获取状态栏高度
+  const menuButtonHeight = menuButtonObject.height // 获取胶囊顶部高度
+  const menuButtonTop = menuButtonObject.top // 获取胶囊距离顶部的高度
+  const navBarHeight =
+    statusBarHeight +
+    menuButtonHeight +
+    (menuButtonTop - statusBarHeight) * 2 // 计算nav导航栏的高度
+
+  return {
+    statusBarHeight,
+    navBarHeight: navBarHeight + 4
+  }
+}
