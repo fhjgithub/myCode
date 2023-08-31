@@ -1,0 +1,16 @@
+{
+  "name": "modules_update",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "child_process": "1.0.2",
+    "fs-extra": "^10.0.0",
+    "moment": "2.29.1",
+    "request": "^2.88.2",
+    "tar": "^6.1.11",
+    "yargs": "15.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "license": "ISC"
+}
