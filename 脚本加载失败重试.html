@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        const domains = ['a.com', 'b.com', 'c.com'] //重试的域名列表
+        //什么时间
+        //怎么重试
+        const retry = {}
+        window.addEventListener('error', (e) => {
+            // ErrorEvent 是不处理 throw error这种异常
+            if (e.target.tagName !== 'SCRIPT' || e instanceof ErrorEvent) return
+            const url = new URL(e.target.src)
+            const key = url.pathname
+            if (!(key in retry)) {
+                retry[key] = 0
+            }
+            const index = retry[key]
+            if (index >= domains.length) return
+            const domain = domains[index]
+            url.host = domain
+            // const script = document.createElement('script')
+            // script.src = url.toString()
+            // document.insertBefore(script, e.target) 不会阻塞浏览器解析
+            document.write(`\<script src="${url.toString()}">\<\/script>`) //document.write会阻塞浏览器解析，为了按顺序加载script
+            retry[key]++
+        },
+            true //捕获阶段监听script的error，冒泡监听不到
+        )
+    </script>
+</head>
+
+<body>
+    <script src="http://test123.com/1.js"></script>
+    <script src="http://test1234.com/2.js"></script>
+    <script src="http://test12345.com/3.js"></script>
+</body>
+
+</html>
